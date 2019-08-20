@@ -1,0 +1,22 @@
+{
+  "name": "nuskin-loyalty-annexcloud-graphql",
+  "version": "1.0.0",
+  "description": "Loads data from Annex Cloud GraphQL Proxy service and runs calculations for bucket totals and activity classification",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ryanwkell/nuskin-loyalty-annexcloud-graphql.git"
+  },
+  "author": "Ryan Kell <rkell@solutionstream.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ryanwkell/nuskin-loyalty-annexcloud-graphql/issues"
+  },
+  "homepage": "https://github.com/ryanwkell/nuskin-loyalty-annexcloud-graphql#readme",
+  "dependencies": {
+    "axios": "0.19.0"
+  }
+}
