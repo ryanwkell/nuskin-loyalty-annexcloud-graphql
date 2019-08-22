@@ -1,6 +1,6 @@
 {
   "name": "nuskin-loyalty-annexcloud-graphql",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Loads data from Annex Cloud GraphQL Proxy service and runs calculations for bucket totals and activity classification",
   "main": "src/index.js",
   "scripts": {
