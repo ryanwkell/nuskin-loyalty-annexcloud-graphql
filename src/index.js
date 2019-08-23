@@ -115,6 +115,7 @@ let AnnexCloud = class AnnexCloud {
         }
       }
       marketConfig(market: "` + this.market + `") {
+        titleParticipant
         tierConfig {
           name
           purchaseIncrement
@@ -161,6 +162,7 @@ let AnnexCloud = class AnnexCloud {
               actionId
               activity
               credit
+              debit
               displayText
               orderId
               createDate
@@ -175,6 +177,7 @@ let AnnexCloud = class AnnexCloud {
           }
         }
         marketConfig(market: "` + this.market + `") {
+          titleParticipant
           tierConfig {
             name
             purchaseIncrement
