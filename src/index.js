@@ -1,41 +1,6 @@
 let axios = require('axios')
 
 let AnnexCloud = class AnnexCloud {
-  requestUrl = '';
-  market = '';
-  userId = '';
-  jwt = '';
-  client_id = '';
-  client_secret = '';
-
-  activity = [];
-
-  buckets = {
-    withinSeven: [],
-    withinThirty: 0,
-    longTerm: 0
-  }
-
-  currentTierData = {
-    name: '',
-    purchaseIncrement: 0,
-    minSpend: 0,
-    purchaseRatio: 0,
-    redemptionLimit: 0,
-    daysToExpire: 0
-  }
-
-  soonestExpiring = {
-    pointsToExpire: 0,
-    expirationDate: new Date()
-  }
-
-  tierData = [];
-
-  wallet = {
-    available: 0,
-    spent: 0
-  };
 
   constructor (constructorObject) {
     this.requestUrl = constructorObject.requestUrl + '/loyalty-graphql/';
@@ -44,6 +9,35 @@ let AnnexCloud = class AnnexCloud {
     this.jwt = constructorObject.jwt;
     this.client_id = constructorObject.client_id;
     this.client_secret = constructorObject.client_secret;
+
+    this.activity = [];
+
+    this.buckets = {
+      withinSeven: [],
+      withinThirty: 0,
+      longTerm: 0
+    };
+
+    this.currentTierData = {
+      name: '',
+      purchaseIncrement: 0,
+      minSpend: 0,
+      purchaseRatio: 0,
+      redemptionLimit: 0,
+      daysToExpire: 0
+    };
+
+    this.soonestExpiring = {
+      pointsToExpire: 0,
+      expirationDate: new Date()
+    };
+
+    this.tierData = [];
+
+    this.wallet = {
+      available: 0,
+      spent: 0
+    };
   }
 
   adjustWithinSevenToConsiderPartialCreditAvailability(totalToAdjustBy) {
@@ -59,22 +53,21 @@ let AnnexCloud = class AnnexCloud {
   }
 
   createAndSetBucketsFromActivity(graphResponse) {
-    let availableCredits = graphResponse.user.points.availablePoints;
     let runningTotal = graphResponse.user.points.availablePoints;
     graphResponse.user.activity.activityDetail.forEach( (activity) => {
-      let dateDiff = activity.expireDate ? this.calculateDayDifference(activity.expireDate) : -1;
+      let dateDiff = activity.expireDate ? this.calculateDayDifference(activity.expireDate) : 3650;
       if(activity.credit && runningTotal > 0 && dateDiff >= 0) {
         if(dateDiff > 30) {
-          if(activity.credit <= availableCredits){
+          if(activity.credit <= runningTotal){
             this.buckets.longTerm += activity.credit;
           } else {
-            this.buckets.longTerm += availableCredits;
+            this.buckets.longTerm += runningTotal;
           }
         } else if(dateDiff > 7) {
-          if(activity.credit <= availableCredits){
+          if(activity.credit <= runningTotal){
             this.buckets.withinThirty += activity.credit;
           } else {
-            this.buckets.withinThirty += availableCredits;
+            this.buckets.withinThirty += runningTotal;
           }
         } else {
           this.buckets.withinSeven.push(activity);
@@ -251,7 +244,7 @@ let AnnexCloud = class AnnexCloud {
       let axiosResponse = await axios(requestConfig);
       return axiosResponse.data
     } catch (error) {
-      console.error('We have an error:', error)
+      console.error('There is an error connecting to the GraphQL Proxy. Here is the error response: ', error)
     }
   }
 
