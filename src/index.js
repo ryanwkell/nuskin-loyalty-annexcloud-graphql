@@ -283,7 +283,7 @@ let AnnexCloud = class AnnexCloud {
 
   setSoonestToExpire(graphResponse) {
     this.soonestExpiring.pointsToExpire = graphResponse.user.points.pointsToExpire;
-    this.soonestExpiring.expirationDate = new Date(graphResponse.user.points.pointsToExpireDate);
+    this.soonestExpiring.expirationDate = graphResponse.user.points.pointsToExpireDate;
   }
 
   setWallet(graphResponse) {
