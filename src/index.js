@@ -36,7 +36,10 @@ let AnnexCloud = class AnnexCloud {
 
     this.wallet = {
       available: 0,
-      spent: 0
+      spent: 0,
+      spentInPeriod: 0,
+      expiredPoints: 0,
+      lifetimePointsEarned: 0
     };
   }
 
@@ -109,6 +112,7 @@ let AnnexCloud = class AnnexCloud {
           totalSpend
           usedPoints
           expiredPoints
+          lifetimePoints
           spendToNextTier
           pointsToExpire
           pointsToExpireDate
@@ -171,7 +175,11 @@ let AnnexCloud = class AnnexCloud {
           }
           points {
             availablePoints
+            totalSpend
             usedPoints
+            expiredPoints
+            lifetimePoints
+            spendToNextTier
             pointsToExpire
             pointsToExpireDate
           }
@@ -212,7 +220,11 @@ let AnnexCloud = class AnnexCloud {
           optInStatus
           points {
             availablePoints
+            totalSpend
             usedPoints
+            expiredPoints
+            lifetimePoints
+            spendToNextTier
             pointsToExpire
             pointsToExpireDate
           }
@@ -277,6 +289,9 @@ let AnnexCloud = class AnnexCloud {
   setWallet(graphResponse) {
     this.wallet.available = graphResponse.user.points.availablePoints;
     this.wallet.spent = graphResponse.user.points.usedPoints;
+    this.wallet.spentInPeriod = graphResponse.user.points.spentPoints;
+    this.wallet.expired = graphResponse.user.points.expiredPoints;
+    this.wallet.lifetimePointsEarned = graphResponse.user.points.lifetimePoints;
   }
 
   sort(prop, arr) {
