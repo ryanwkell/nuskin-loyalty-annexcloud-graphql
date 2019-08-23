@@ -289,7 +289,7 @@ let AnnexCloud = class AnnexCloud {
   setWallet(graphResponse) {
     this.wallet.available = graphResponse.user.points.availablePoints;
     this.wallet.spent = graphResponse.user.points.usedPoints;
-    this.wallet.spentInPeriod = graphResponse.user.points.spentPoints;
+    this.wallet.spentInPeriod = graphResponse.user.points.totalSpend;
     this.wallet.expired = graphResponse.user.points.expiredPoints;
     this.wallet.lifetimePointsEarned = graphResponse.user.points.lifetimePoints;
   }
