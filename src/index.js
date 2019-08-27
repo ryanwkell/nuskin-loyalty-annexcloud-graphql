@@ -101,6 +101,7 @@ let AnnexCloud = class AnnexCloud {
             actionId
             activity
             credit
+            debit
             displayText
             orderId
             createDate
