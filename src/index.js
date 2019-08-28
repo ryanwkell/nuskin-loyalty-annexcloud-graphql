@@ -32,6 +32,8 @@ let AnnexCloud = class AnnexCloud {
       expirationDate: new Date()
     };
 
+    this.status = false;
+
     this.tierData = [];
 
     this.wallet = {
@@ -138,6 +140,7 @@ let AnnexCloud = class AnnexCloud {
       this.createAndSetBucketsFromActivity(graphResponse);
       this.setCurrentTierData(graphResponse);
       this.setSoonestToExpire(graphResponse);
+      this.setStatus(graphResponse);
       this.setTierData(graphResponse);
       this.setWallet(graphResponse);
     });
@@ -145,6 +148,7 @@ let AnnexCloud = class AnnexCloud {
     return {
       activity: this.activity,
       buckets: this.buckets,
+      optInStatus: this.status,
       soonestExpiring: this.soonestExpiring,
       tierData: this.tierData,
       userTier: this.currentTierData,
@@ -203,11 +207,13 @@ let AnnexCloud = class AnnexCloud {
       this.createAndSetBucketsFromActivity(graphResponse);
       this.setCurrentTierData(graphResponse);
       this.setSoonestToExpire(graphResponse);
+      this.setStatus(graphResponse);
       this.setWallet(graphResponse);
     });
 
     return {
       buckets: this.buckets,
+      optInStatus: this.status,
       soonestExpiring: this.soonestExpiring,
       userTier: this.currentTierData,
       wallet: this.wallet
@@ -235,12 +241,14 @@ let AnnexCloud = class AnnexCloud {
 
     await this.makeGraphCall(queryString).then(graphResponse => {
       this.setSoonestToExpire(graphResponse);
+      this.setStatus(graphResponse);
       this.setWallet(graphResponse);
     });
 
     return {
-      wallet: this.wallet,
-      soonestExpiring: this.soonestExpiring
+      optInStatus: this.status,
+      soonestExpiring: this.soonestExpiring,
+      wallet: this.wallet
     }
   }
 
@@ -285,6 +293,10 @@ let AnnexCloud = class AnnexCloud {
   setSoonestToExpire(graphResponse) {
     this.soonestExpiring.pointsToExpire = graphResponse.user.points.pointsToExpire;
     this.soonestExpiring.expirationDate = graphResponse.user.points.pointsToExpireDate;
+  }
+
+  setStatus(graphResponse) {
+    this.status = graphResponse.user.optInStatus;
   }
 
   setWallet(graphResponse) {
