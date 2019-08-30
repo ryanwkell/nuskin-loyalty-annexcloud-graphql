@@ -45,19 +45,19 @@ let AnnexCloud = class AnnexCloud {
     };
   }
 
-  adjustWithinSevenToConsiderPartialCreditAvailability = ((totalToAdjustBy) => {
+  adjustWithinSevenToConsiderPartialCreditAvailability(totalToAdjustBy) {
     let sortedArray = this.sort('expireDate', this.buckets.withinSeven);
     sortedArray[0].credit -= totalToAdjustBy;
     this.buckets.withinSeven = sortedArray;
-  })
+  }
 
-  calculateDayDifference = ((date) => {
+  calculateDayDifference(date) {
     let now = new Date();
     let expireDate = new Date(date);
     return Math.floor((Date.UTC(expireDate.getFullYear(), expireDate.getMonth(), expireDate.getDate()) - Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) ) /(1000 * 60 * 60 * 24));
-  })
+  }
 
-  createAndSetBucketsFromActivity = ((graphResponse) => {
+  createAndSetBucketsFromActivity(graphResponse) {
     if(!graphResponse.user){
       return false;
     }
@@ -86,7 +86,7 @@ let AnnexCloud = class AnnexCloud {
     if(this.buckets.withinSeven.length && runningTotal < 0) {
       this.adjustWithinSevenToConsiderPartialCreditAvailability(runningTotal);
     }
-  })
+  }
 
   async getAllAnnexInfo() {
     let queryString = `
@@ -275,7 +275,7 @@ let AnnexCloud = class AnnexCloud {
     }
   }
 
-  setCurrentTierData = ((graphResponse) => {
+  setCurrentTierData(graphResponse) {
     if(!graphResponse.user) {
       return false;
     }
@@ -288,30 +288,30 @@ let AnnexCloud = class AnnexCloud {
         this.currentTierData = tierData;
       }
     });
-  })
+  }
 
-  setTierData = ((graphResponse) => {
+  setTierData(graphResponse) {
     if(!graphResponse.marketConfig) {
       return false;
     }
     graphResponse.marketConfig.tierConfig.forEach((market) => {
       this.tierData.push(market)
     });
-  })
+  }
 
-  setSoonestToExpire = ((graphResponse) => {
+  setSoonestToExpire(graphResponse) {
     if(!graphResponse.user) {
       return false;
     }
     this.soonestExpiring.pointsToExpire = graphResponse.user.points.pointsToExpire;
     this.soonestExpiring.expirationDate = graphResponse.user.points.pointsToExpireDate;
-  })
+  }
 
-  setStatus = ((graphResponse) => {
+  setStatus(graphResponse) {
     this.status = graphResponse.user ? graphResponse.user.optInStatus : false;
-  })
+  }
 
-  setWallet = ((graphResponse) => {
+  setWallet(graphResponse) {
     if(!graphResponse.user) {
       return false;
     }
@@ -320,9 +320,9 @@ let AnnexCloud = class AnnexCloud {
     this.wallet.spentInPeriod = graphResponse.user.points.totalSpend;
     this.wallet.expired = graphResponse.user.points.expiredPoints;
     this.wallet.lifetimePointsEarned = graphResponse.user.points.lifetimePoints;
-  })
+  }
 
-  sort = ((prop, arr) => {
+  sort(prop, arr) {
     prop = prop.split('.');
     var len = prop.length;
     
@@ -342,7 +342,7 @@ let AnnexCloud = class AnnexCloud {
         }
     });
     return arr;
-  })
+  }
 
 }
 
