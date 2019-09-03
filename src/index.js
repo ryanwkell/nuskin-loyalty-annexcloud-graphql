@@ -159,6 +159,56 @@ let AnnexCloud = class AnnexCloud {
     }
   }
 
+  async getMarketConfig() {
+    let queryString = ``;
+    if(this.userId){
+      queryString = `
+      {
+        user(accountId: "` + this.userId + `", market: "` + this.market + `") {
+          optInStatus
+        }
+        marketConfig(market: "` + this.market + `") {
+          titleParticipant
+          tierConfig {
+            name
+            purchaseIncrement
+            minSpend
+            purchaseRatio
+            redemptionLimit
+            daysToExpire
+          }
+        }
+      }
+    `;
+    } else {
+      queryString = `
+      {
+        marketConfig(market: "` + this.market + `") {
+          titleParticipant
+          tierConfig {
+            name
+            purchaseIncrement
+            minSpend
+            purchaseRatio
+            redemptionLimit
+            daysToExpire
+          }
+        }
+      }
+    `;
+    }
+
+    await this.makeGraphCall(queryString).then(graphResponse => {
+      this.setStatus(graphResponse);
+      this.setTierData(graphResponse);
+    });
+
+    return {
+      optInStatus: this.status,
+      tierData: this.tierData
+    }
+  }
+
   async getRewardsBucketsAndCurrentTierData() {
     let queryString = `
       {
