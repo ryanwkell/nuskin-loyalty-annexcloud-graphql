@@ -30,6 +30,8 @@ loyalty.getAllLoyaltyInfo().then(response => {
 });
 ```
 
+### Please note: all functions are asynchronous, so make sure you handle the expected response appropriately.
+
 As you likely noticed, the library expects an object in the constructor with the following data points:
 
 ```
