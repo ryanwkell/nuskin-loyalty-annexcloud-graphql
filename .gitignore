@@ -1,3 +1,7 @@
 node_modules
 
-test.js
+local.js
+
+test-report.xml
+
+coverage/*

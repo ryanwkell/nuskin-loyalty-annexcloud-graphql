@@ -47,7 +47,7 @@ let NsLoyalty = class NsLoyalty {
 
   adjustWithinSevenToConsiderPartialCreditAvailability(totalToAdjustBy) {
     let sortedArray = this.sort('expireDate', this.buckets.withinSeven);
-    sortedArray[0].credit -= totalToAdjustBy;
+    sortedArray[0].credit += totalToAdjustBy;
     this.buckets.withinSeven = sortedArray;
   }
 
@@ -55,6 +55,14 @@ let NsLoyalty = class NsLoyalty {
     let now = new Date();
     let expireDate = new Date(date);
     return Math.floor((Date.UTC(expireDate.getFullYear(), expireDate.getMonth(), expireDate.getDate()) - Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) ) /(1000 * 60 * 60 * 24));
+  }
+
+  createActivityArray(activityArray){
+    let activity = [];
+    activityArray.forEach( (item) => {
+      activity.push(Object.assign({}, item));
+    });
+    return activity;
   }
 
   createAndSetBucketsFromActivity(graphResponse) {
@@ -66,17 +74,9 @@ let NsLoyalty = class NsLoyalty {
       let dateDiff = activity.expireDate ? this.calculateDayDifference(activity.expireDate) : 3650;
       if(activity.credit && runningTotal > 0 && dateDiff >= 0) {
         if(dateDiff > 30) {
-          if(activity.credit <= runningTotal){
-            this.buckets.longTerm += activity.credit;
-          } else {
-            this.buckets.longTerm += runningTotal;
-          }
+          this.buckets.longTerm += activity.credit;
         } else if(dateDiff > 7) {
-          if(activity.credit <= runningTotal){
-            this.buckets.withinThirty += activity.credit;
-          } else {
-            this.buckets.withinThirty += runningTotal;
-          }
+          this.buckets.withinThirty += activity.credit;
         } else {
           this.buckets.withinSeven.push(activity);
         }
@@ -89,6 +89,7 @@ let NsLoyalty = class NsLoyalty {
   }
 
   async getAllLoyaltyInfo() {
+    this.resetLoyaltyObject();
     let queryString = `
     {
       user(accountId: "` + this.userId + `", market: "` + this.market + `") {
@@ -139,7 +140,7 @@ let NsLoyalty = class NsLoyalty {
     `;
 
     await this.makeGraphCall(queryString).then(graphResponse => {
-      this.activity = graphResponse.user ? graphResponse.user.activity.activityDetail : [];
+      this.activity = graphResponse.user ? this.createActivityArray(graphResponse.user.activity.activityDetail) : [];
       this.createAndSetBucketsFromActivity(graphResponse);
       this.setCurrentTierData(graphResponse);
       this.setSoonestToExpire(graphResponse);
@@ -160,6 +161,7 @@ let NsLoyalty = class NsLoyalty {
   }
 
   async getMarketConfig() {
+    this.resetLoyaltyObject();
     let queryString = ``;
     if(this.userId){
       queryString = `
@@ -210,6 +212,7 @@ let NsLoyalty = class NsLoyalty {
   }
 
   async getRewardsBucketsAndCurrentTierData() {
+    this.resetLoyaltyObject();
     let queryString = `
       {
         user(accountId: "` + this.userId + `", market: "` + this.market + `") {
@@ -274,6 +277,7 @@ let NsLoyalty = class NsLoyalty {
   }
 
   async getWalletAndSoonestToExpire() {
+    this.resetLoyaltyObject();
     let queryString = `
       {
         user(accountId: "` + this.userId + `", market: "` + this.market + `") {
@@ -308,9 +312,6 @@ let NsLoyalty = class NsLoyalty {
   async makeGraphCall(queryString) {
     try {
       let requestConfig = {
-        method: 'POST',
-        url: this.requestUrl,
-        data: queryString,
         headers: {
           "Content-Type": "text/plain",
           "Authorization": this.jwt,
@@ -318,11 +319,47 @@ let NsLoyalty = class NsLoyalty {
           "client_secret": this.client_secret
         }
       }
-      let axiosResponse = await axios(requestConfig);
+      let axiosResponse = await axios.post(this.requestUrl, queryString, requestConfig);
       return axiosResponse.data
     } catch (error) {
       console.error('There is an error connecting to the GraphQL Proxy. Here is the error response: ', error)
     }
+  }
+
+  resetLoyaltyObject() {
+    this.activity = [];
+
+    this.buckets = {
+      withinSeven: [],
+      withinThirty: 0,
+      longTerm: 0
+    };
+
+    this.currentTierData = {
+      name: false,
+      purchaseIncrement: 0,
+      minSpend: 0,
+      purchaseRatio: 0,
+      redemptionLimit: 0,
+      daysToExpire: 0
+    };
+
+    this.soonestExpiring = {
+      pointsToExpire: 0,
+      expirationDate: new Date()
+    };
+
+    this.status = false;
+
+    this.tierData = [];
+
+    this.wallet = {
+      available: 0,
+      spent: 0,
+      spentInPeriod: 0,
+      expiredPoints: 0,
+      lifetimePointsEarned: 0
+    };
   }
 
   setCurrentTierData(graphResponse) {
@@ -331,7 +368,6 @@ let NsLoyalty = class NsLoyalty {
     }
     //Define the current tier of the user in question:
     let userCurrentTier = graphResponse.user.tier.currentTier;
-    
     //Iterate through the market data to get the info for the tier they belong to:
     graphResponse.marketConfig.tierConfig.forEach( (tierData) => {
       if(tierData.name === userCurrentTier) {
@@ -343,6 +379,8 @@ let NsLoyalty = class NsLoyalty {
   setTierData(graphResponse) {
     if(!graphResponse.marketConfig) {
       return false;
+    } else {
+      this.tierData = [];
     }
     graphResponse.marketConfig.tierConfig.forEach((market) => {
       this.tierData.push(market)

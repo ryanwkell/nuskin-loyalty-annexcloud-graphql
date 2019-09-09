@@ -4,7 +4,7 @@
   "description": "Loads data from Annex Cloud GraphQL Proxy service and runs calculations for bucket totals and activity classification",
   "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -18,5 +18,13 @@
   "homepage": "https://github.com/ryanwkell/nuskin-loyalty-annexcloud-graphql#readme",
   "dependencies": {
     "axios": "0.19.0"
+  },
+  "devDependencies": {
+    "jest": "^24.9.0",
+    "jest-sonar-reporter": "^2.0.0",
+    "babel-jest": "^23.6.0",
+    "babel-core": "7.0.0-bridge.0",
+    "@babel/core": "^7.4.5",
+    "@babel/preset-env": "^7.4.5"
   }
 }
