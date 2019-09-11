@@ -51,6 +51,16 @@ module.exports = {
                                     expireDate: null
                                 },
                                 {
+                                    actionId: 107,
+                                    activity: "CREDIT",
+                                    credit: null,
+                                    debit: 250,
+                                    displayText: "107 Debit",
+                                    orderId: "123456",
+                                    createDate: "2019-08-20T22:05:57+0000",
+                                    expireDate: null
+                                },
+                                {
                                     actionId: 109,
                                     activity: "CREDIT",
                                     credit: 500,

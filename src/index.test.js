@@ -107,7 +107,7 @@ describe('Checking test', () => {
         },
         wallet: {
           available: 1400,
-          spent: 100,
+          spent: 250,
           spentInPeriod: 1500,
           expiredPoints: 0,
           lifetimePointsEarned: 1500,
@@ -120,7 +120,7 @@ describe('Checking test', () => {
         soonestExpiring: { pointsToExpire: 400, expirationDate: format(fiveDays) },
         wallet: {
           available: 1400,
-          spent: 100,
+          spent: 250,
           spentInPeriod: 1500,
           expiredPoints: 0,
           lifetimePointsEarned: 1500,
@@ -138,6 +138,16 @@ describe('Checking test', () => {
             displayText: "Return",
             orderId: "123456",
             createDate: "2019-08-20T22:40:17+0000",
+            expireDate: null
+          },
+          {
+            actionId: 107,
+            activity: "CREDIT",
+            credit: null,
+            debit: 250,
+            displayText: "107 Debit",
+            orderId: "123456",
+            createDate: "2019-08-20T22:05:57+0000",
             expireDate: null
           },
           {
@@ -227,7 +237,7 @@ describe('Checking test', () => {
         },
         wallet: {
           available: 1400,
-          spent: 100,
+          spent: 250,
           spentInPeriod: 1500,
           expiredPoints: 0,
           lifetimePointsEarned: 1500,

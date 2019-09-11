@@ -282,6 +282,20 @@ let NsLoyalty = class NsLoyalty {
       {
         user(accountId: "` + this.userId + `", market: "` + this.market + `") {
           optInStatus
+          activity {
+            pages
+            activityCount
+            activityDetail {
+              actionId
+              activity
+              credit
+              debit
+              displayText
+              orderId
+              createDate
+              expireDate
+            }
+          }
           points {
             availablePoints
             totalSpend
@@ -404,7 +418,7 @@ let NsLoyalty = class NsLoyalty {
       return false;
     }
     this.wallet.available = graphResponse.user.points.availablePoints;
-    this.wallet.spent = graphResponse.user.points.usedPoints;
+    this.wallet.spent = this.tallySpentPoints(graphResponse.user);
     this.wallet.spentInPeriod = graphResponse.user.points.totalSpend;
     this.wallet.expired = graphResponse.user.points.expiredPoints;
     this.wallet.lifetimePointsEarned = graphResponse.user.points.lifetimePoints;
@@ -430,6 +444,18 @@ let NsLoyalty = class NsLoyalty {
         }
     });
     return arr;
+  }
+
+  tallySpentPoints(graphResponseUser) {
+    let totalSpend = 0;
+
+    graphResponseUser.activity.activityDetail.forEach( (activity) => {
+      if(activity.actionId === 107) {
+        totalSpend += activity.debit;
+      }
+    })
+
+    return totalSpend;
   }
 
 }
