@@ -88,7 +88,7 @@ describe('Checking test', () => {
         buckets: { withinSeven: [{
           actionId: 109,
           activity: "CREDIT",
-          credit: 400,
+          credit: 250,
           debit: null,
           displayText: "Purchase",
           orderId: "123456",
@@ -142,7 +142,7 @@ describe('Checking test', () => {
           },
           {
             actionId: 107,
-            activity: "CREDIT",
+            activity: "DEBIT",
             credit: null,
             debit: 250,
             displayText: "107 Debit",
@@ -184,7 +184,7 @@ describe('Checking test', () => {
         buckets: { withinSeven: [{
           actionId: 109,
           activity: "CREDIT",
-          credit: 400,
+          credit: 250,
           debit: null,
           displayText: "Purchase",
           orderId: "123456",

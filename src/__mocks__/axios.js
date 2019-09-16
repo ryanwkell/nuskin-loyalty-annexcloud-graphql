@@ -52,7 +52,7 @@ module.exports = {
                                 },
                                 {
                                     actionId: 107,
-                                    activity: "CREDIT",
+                                    activity: "DEBIT",
                                     credit: null,
                                     debit: 250,
                                     displayText: "107 Debit",
