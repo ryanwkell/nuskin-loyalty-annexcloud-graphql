@@ -51,6 +51,15 @@ let NsLoyalty = class NsLoyalty {
     this.buckets.withinSeven = sortedArray;
   }
 
+  calculateCredit(activity, returnedItems) {
+    if('order_' + activity.orderId.toString() in returnedItems){
+      let returnVal = activity.credit - returnedItems['order_' + activity.orderId.toString()].returnValue;
+      return returnVal;
+    } else {
+      return activity.credit;
+    }
+  }
+
   calculateDayDifference(date) {
     let now = new Date();
     let expireDate = new Date(date);
@@ -70,17 +79,37 @@ let NsLoyalty = class NsLoyalty {
       return false;
     }
     let runningTotal = graphResponse.user.points.availablePoints;
+    let returnedItems = [];
+    //We need to get a list of the returns, so that we don't count those rewards:
+    graphResponse.user.activity.activityDetail.forEach( (activity) => {
+      if(activity.actionId === 148) {
+        let orderArray = {}
+        if('order_' + activity.orderId.toString() in returnedItems){
+          orderArray = returnedItems[activity.orderId];
+          orderArray.returnValue = orderArray.returnValue + activity.debit;
+        } else {
+          orderArray = {
+            orderId: activity.orderId,
+            returnValue: activity.debit
+          }
+        }
+        returnedItems['order_' + activity.orderId.toString()] = orderArray;
+      }
+    });
     graphResponse.user.activity.activityDetail.forEach( (activity) => {
       let dateDiff = activity.expireDate ? this.calculateDayDifference(activity.expireDate) : 3650;
       if(activity.credit && runningTotal > 0 && dateDiff >= 0) {
         if(dateDiff > 30) {
-          this.buckets.longTerm += activity.credit;
+          this.buckets.longTerm += this.calculateCredit(activity, returnedItems);
         } else if(dateDiff > 7) {
-          this.buckets.withinThirty += activity.credit;
+          this.buckets.withinThirty += this.calculateCredit(activity, returnedItems);
         } else {
-          this.buckets.withinSeven.push(activity);
+          this.buckets.withinSeven.push(this.getWithinSevenActivityWithReturnsCalculated(activity, returnedItems));
         }
-        runningTotal = runningTotal - activity.credit;
+        runningTotal -= this.calculateCredit(activity, returnedItems);
+      }
+      if(activity.debit && activity.actionId === 107) {
+        runningTotal = runningTotal - activity.debit;
       }
     });
     if(this.buckets.withinSeven.length && runningTotal < 0) {
@@ -321,6 +350,13 @@ let NsLoyalty = class NsLoyalty {
       soonestExpiring: this.soonestExpiring,
       wallet: this.wallet
     }
+  }
+
+  getWithinSevenActivityWithReturnsCalculated(activity, returnedItems) {
+    if(returnedItems.includes('order_' + activity.orderId.toString())) {
+      activity.credit = this.calculateCredit(activity, returnedItems);
+    }
+    return activity;
   }
 
   async makeGraphCall(queryString) {
