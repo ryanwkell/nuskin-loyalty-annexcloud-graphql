@@ -111,6 +111,9 @@ let NsLoyalty = class NsLoyalty {
     });
     if(this.buckets.withinSeven.length && runningTotal < 0) {
       this.adjustWithinSevenToConsiderPartialCreditAvailability(runningTotal);
+    } else {
+      let sortedArray = this.sort('expireDate', this.buckets.withinSeven);
+      this.buckets.withinSeven = sortedArray;
     }
   }
 
