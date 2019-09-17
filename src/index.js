@@ -108,9 +108,6 @@ let NsLoyalty = class NsLoyalty {
         }
         runningTotal -= this.calculateCredit(activity, returnedItems);
       }
-      if(activity.debit && activity.actionId === 107) {
-        runningTotal = runningTotal - activity.debit;
-      }
     });
     if(this.buckets.withinSeven.length && runningTotal < 0) {
       this.adjustWithinSevenToConsiderPartialCreditAvailability(runningTotal);
