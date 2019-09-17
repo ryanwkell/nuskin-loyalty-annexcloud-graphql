@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "test": "jest",
-    "deploy-release": "chmod +x ./scripts/deploy.sh && ./scripts/deploy.sh artifactType=release"
+    "deploy-release": "chmod +x ./scripts/deploy.sh && ./scripts/deploy.sh"
   },
   "repository": {
     "type": "git",
