@@ -1,6 +1,6 @@
 pipeline {
   agent {
-    label 'docker-nodejs-9.x-public-npm'
+    label 'docker-nodejs-10.x-public-npm'
   }
   
   triggers {
