@@ -121,7 +121,7 @@ let NsLoyalty = class NsLoyalty {
     this.resetLoyaltyObject();
     let queryString = `
     {
-      user(accountId: "` + this.userId + `", market: "` + this.market + `") {
+      user(accountId: "${this.userId}", market: "${this.market}") {
         optInStatus
         tier {
           currentTier
@@ -154,7 +154,7 @@ let NsLoyalty = class NsLoyalty {
           pointsToExpireDate
         }
       }
-      marketConfig(market: "` + this.market + `") {
+      marketConfig(market: "${this.market}") {
         titleParticipant
         tierConfig {
           name
@@ -195,10 +195,10 @@ let NsLoyalty = class NsLoyalty {
     if(this.userId){
       queryString = `
       {
-        user(accountId: "` + this.userId + `", market: "` + this.market + `") {
+        user(accountId: "${this.userId}", market: "${this.market}") {
           optInStatus
         }
-        marketConfig(market: "` + this.market + `") {
+        marketConfig(market: ${this.market}) {
           titleParticipant
           tierConfig {
             name
@@ -214,7 +214,7 @@ let NsLoyalty = class NsLoyalty {
     } else {
       queryString = `
       {
-        marketConfig(market: "` + this.market + `") {
+        marketConfig(market: ${this.market}) {
           titleParticipant
           tierConfig {
             name
@@ -244,7 +244,7 @@ let NsLoyalty = class NsLoyalty {
     this.resetLoyaltyObject();
     let queryString = `
       {
-        user(accountId: "` + this.userId + `", market: "` + this.market + `") {
+        user(accountId: ${this.userId}, market: ${this.market}) {
           optInStatus
           tier {
             currentTier
@@ -274,7 +274,7 @@ let NsLoyalty = class NsLoyalty {
             pointsToExpireDate
           }
         }
-        marketConfig(market: "` + this.market + `") {
+        marketConfig(market: ${this.market}) {
           titleParticipant
           tierConfig {
             name
@@ -309,7 +309,7 @@ let NsLoyalty = class NsLoyalty {
     this.resetLoyaltyObject();
     let queryString = `
       {
-        user(accountId: "` + this.userId + `", market: "` + this.market + `") {
+        user(accountId: ${this.userId}, market: ${this.market}) {
           optInStatus
           activity {
             pages

@@ -15,9 +15,9 @@ module.exports = {
   testResultsProcessor: 'jest-sonar-reporter',
   'coverageThreshold': {
     'global': {
-      'branches': 70,
-      'functions': 70,
-      'lines': 70,
+      'branches': 50,
+      'functions': 90,
+      'lines': 80,
       'statements': 70
     }
   },

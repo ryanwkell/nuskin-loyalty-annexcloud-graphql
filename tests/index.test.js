@@ -1,4 +1,4 @@
-import nsLoyalty from './index';
+import nsLoyalty from '../src/index';
 import mockAxios from 'axios';
 
 const loyalty = new nsLoyalty.NsLoyalty({
@@ -88,7 +88,7 @@ describe('Checking test', () => {
         buckets: { withinSeven: [{
           actionId: 109,
           activity: "CREDIT",
-          credit: 250,
+          credit: 500,
           debit: null,
           displayText: "Purchase",
           orderId: "123456",
@@ -184,7 +184,7 @@ describe('Checking test', () => {
         buckets: { withinSeven: [{
           actionId: 109,
           activity: "CREDIT",
-          credit: 250,
+          credit: 500,
           debit: null,
           displayText: "Purchase",
           orderId: "123456",
