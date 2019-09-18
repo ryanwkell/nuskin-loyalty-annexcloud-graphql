@@ -304,6 +304,25 @@ let NsLoyalty = class NsLoyalty {
       wallet: this.wallet
     }
   }
+  
+  async getUserOptInStatus() {
+    this.resetLoyaltyObject();
+    let queryString = `
+      {
+        user(accountId: ${this.userId}, market: ${this.market}) {
+          optInStatus
+        }
+      }
+    `;
+
+    await this.makeGraphCall(queryString).then(graphResponse => {
+      this.setStatus(graphResponse);
+    });
+
+    return {
+      optInStatus: this.status
+    }
+  }
 
   async getWalletAndSoonestToExpire() {
     this.resetLoyaltyObject();
@@ -373,6 +392,18 @@ let NsLoyalty = class NsLoyalty {
       return axiosResponse.data
     } catch (error) {
       console.error('There is an error connecting to the GraphQL Proxy. Here is the error response: ', error)
+    }
+  }
+
+  async optInUser() {
+    return {
+      optInStatus: true
+    }
+  }
+
+  async optOutUser() {
+    return {
+      optInStatus: false
     }
   }
 
